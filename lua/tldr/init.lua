@@ -44,7 +44,7 @@ function M.pick()
         local selection = action_state.get_selected_entry()
         if selection then
           local tldr_page = selection.value
-          vim.cmd("Tldr2 " .. tldr_page)
+          vim.cmd("Tldr " .. tldr_page)
         end
       end)
       return true
