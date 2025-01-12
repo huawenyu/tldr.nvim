@@ -13,6 +13,8 @@ function M.pick()
     return
   end
 
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
   local Picker = require('telescope.pickers')
   local Finder = require('telescope.finders')
   local Sorter = require('telescope.sorters')
@@ -23,7 +25,7 @@ function M.pick()
   })
 
   local picker = Picker:new({
-    prompt_title = 'tldr',
+    prompt_title = 'Tldr',
     finder = finder_fn,
     sorter = Sorter.get_generic_fuzzy_sorter(),
     previewer = require('telescope.previewers').new_termopen_previewer({
@@ -36,6 +38,17 @@ function M.pick()
         }
       end,
     }),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        if selection then
+          local tldr_page = selection.value
+          vim.cmd("Tldr2 " .. tldr_page)
+        end
+      end)
+      return true
+    end,
   })
 
   return picker:find()
